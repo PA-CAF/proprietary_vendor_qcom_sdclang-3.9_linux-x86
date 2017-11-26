@@ -1,0 +1,23 @@
+find . -type f -exec file {} \; \
+    | grep "x86" \
+    | grep "not strip" \
+    | grep -v "relocatable" \
+        | tr ':' ' ' | awk '{print $1}' | while read file; do
+            strip $file
+done
+
+find . -type f -exec file {} \; \
+    | grep "ARM" \
+    | grep "aarch64" \
+    | grep "not strip" \
+    | grep -v "relocatable" \
+        | tr ':' ' ' | awk '{print $1}' | while read file; do ~/rzr/prebuilts/gcc/linux-x86/aarch64/*/bin/aarch64-linux-android-strip $file
+done
+
+find . -type f -exec file {} \; \
+    | grep "ARM" \
+    | grep "32.bit" \
+    | grep "not strip" \
+    | grep -v "relocatable" \
+        | tr ':' ' ' | awk '{print $1}' | while read file; do ~/rzr/prebuilts/gcc/linux-x86/arm/*4.9*/bin/arm-linux-androideabi-strip $file
+done
